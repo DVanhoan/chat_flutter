@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> fetchChats() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.12:5000/api/chat/all'),
+        Uri.parse('https://server-chat-zp9u.onrender.com/api/chat/all'),
         headers: {'Authorization': 'Bearer ${widget.token}'},
       );
 

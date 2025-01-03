@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Future<Profile> fetchProfile(String token, Profile? user) async {
     if (user != null) return user;
 
-    final url = Uri.parse('http://192.168.1.12:5000/api/auth/me');
+    final url = Uri.parse('https://server-chat-zp9u.onrender.com/api/auth/me');
     final response = await http.get(
       url,
       headers: {
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginScreen(
             onLoginSuccess: (token, user  ) {
-              fetchProfile(token, user as Profile?);
+              // fetchProfile(token, user as Profile?);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

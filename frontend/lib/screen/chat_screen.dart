@@ -29,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void setupWebSocket() {
     channel = WebSocketChannel.connect(
-      Uri.parse('ws://192.168.1.12:5000?token=${widget.token}'),
+      Uri.parse('ws://server-chat-zp9u.onrender.com?token=${widget.token}'),
     );
 
     channel.stream.listen((data) {
@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          'http://192.168.1.12:5000/api/chat/recent_messages?conversationId=${widget.chatId}',
+          'http://192.168.43.109:5000/api/chat/recent_messages?conversationId=${widget.chatId}',
         ),
         headers: {
           'Authorization': 'Bearer ${widget.token}',
