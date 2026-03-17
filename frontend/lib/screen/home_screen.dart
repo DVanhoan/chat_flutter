@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'chat_screen.dart';
-import 'package:chat_app/layouts/AppLayout.dart';
-
+import 'package:frontend/layouts/AppLayout.dart';
 
 class HomeScreen extends StatefulWidget {
   final String token;
@@ -56,47 +55,47 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-        child: Scaffold(
-          body: isLoading
-              ? Center(child: CircularProgressIndicator())
-              : errorMessage.isNotEmpty
-              ? Center(child: Text(errorMessage))
-              : ListView.builder(
-            itemCount: chatList.length,
-            itemBuilder: (context, index) {
-              final chat = chatList[index];
-              String name = '';
+      child: Scaffold(
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : errorMessage.isNotEmpty
+            ? Center(child: Text(errorMessage))
+            : ListView.builder(
+                itemCount: chatList.length,
+                itemBuilder: (context, index) {
+                  final chat = chatList[index];
+                  String name = '';
 
-              final participants = chat['participants'];
-              if (participants != null && participants is List) {
-                for (var participant in participants) {
-                  if (participant['username'] != widget.user['username']) {
-                    name = participant['username'];
-                    break;
+                  final participants = chat['participants'];
+                  if (participants != null && participants is List) {
+                    for (var participant in participants) {
+                      if (participant['username'] != widget.user['username']) {
+                        name = participant['username'];
+                        break;
+                      }
+                    }
                   }
-                }
-              }
 
-              name = name.isNotEmpty ? name : 'Chat';
+                  name = name.isNotEmpty ? name : 'Chat';
 
-              return ListTile(
-                title: Text(name),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                          chatId: chat['_id'],
-                          token: widget.token,
-                          user: widget.user
-                      ),
-                    ),
+                  return ListTile(
+                    title: Text(name),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatScreen(
+                            chatId: chat['_id'],
+                            token: widget.token,
+                            user: widget.user,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          )
-      )
+              ),
+      ),
     );
   }
 }

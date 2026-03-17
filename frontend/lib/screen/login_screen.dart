@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:frontend/provider/user_provider.dart';
 import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
@@ -40,7 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         print("response $response");
-        Fluttertoast.showToast(msg: "Login successful!", backgroundColor: Colors.green);
+        Fluttertoast.showToast(
+          msg: "Login successful!",
+          backgroundColor: Colors.green,
+        );
         widget.onLoginSuccess(data['token'], data['user']);
       } else {
         Fluttertoast.showToast(
@@ -49,12 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (error) {
-      Fluttertoast.showToast(msg: "Login failed: $error", backgroundColor: Colors.red);
+      Fluttertoast.showToast(
+        msg: "Login failed: $error",
+        backgroundColor: Colors.red,
+      );
     } finally {
       setState(() => isLoading = false);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         : Text(
                             "Sign In",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                   ),
                 ),

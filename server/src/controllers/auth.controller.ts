@@ -2,28 +2,33 @@ import { generateTokenAndSetCookie } from '../utils/generateToken'
 import User from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
 import { Request, Response } from 'express'
+import type { CustomRequest } from '../type'
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, email, password } = req.body
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' })
+      res.status(400).json({ error: 'Invalid email format' })
+      return
     }
 
     const existingUser = await User.findOne({ username })
     if (existingUser) {
-      return res.status(400).json({ error: 'Username is already taken' })
+      res.status(400).json({ error: 'Username is already taken' })
+      return
     }
 
     const existingEmail = await User.findOne({ email })
     if (existingEmail) {
-      return res.status(400).json({ error: 'Email is already taken' })
+      res.status(400).json({ error: 'Email is already taken' })
+      return
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long' })
+      res.status(400).json({ error: 'Password must be at least 6 characters long' })
+      return
     }
 
     const salt = await bcrypt.genSalt(10)
@@ -54,7 +59,7 @@ export const signup = async (req: Request, res: Response) => {
   }
 }
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email })
@@ -62,7 +67,8 @@ export const login = async (req: Request, res: Response) => {
     const isPasswordCorrect = await bcrypt.compare(password, user?.password || '')
 
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ error: 'Invalid email or password' })
+      res.status(400).json({ error: 'Invalid email or password' })
+      return
     }
     const token = generateTokenAndSetCookie(user._id as string, res)
 
@@ -86,9 +92,9 @@ export const logout = async (req: Request, res: Response) => {
   }
 }
 
-export const getMe = async (req: Request, res: Response) => {
+export const getMe = async (req: CustomRequest, res: Response) => {
   try {
-    const user = await User.findById(req.user._id).select('-password')
+    const user = await User.findById(req.user?._id).select('-password')
     console.log(user)
     res.status(200).json(user)
   } catch (error: any) {

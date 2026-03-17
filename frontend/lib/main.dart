@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:chat_app/layouts/AppLayout.dart';
-import 'package:chat_app/screen/home_screen.dart';
-import 'package:chat_app/screen/login_screen.dart';
-import 'package:chat_app/screen/profile_screen.dart';
-import 'package:chat_app/screen/setting_screen.dart';
+import 'package:frontend/layouts/AppLayout.dart';
+import 'package:frontend/screen/home_screen.dart';
+import 'package:frontend/screen/login_screen.dart';
+import 'package:frontend/screen/profile_screen.dart';
+import 'package:frontend/screen/setting_screen.dart';
+import 'package:frontend/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (context) => UserProvider(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,9 +24,7 @@ class MyApp extends StatelessWidget {
     final url = Uri.parse('https://server-chat-zp9u.onrender.com/api/auth/me');
     final response = await http.get(
       url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -40,19 +42,16 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginScreen(
-            onLoginSuccess: (token, user  ) {
-              // fetchProfile(token, user as Profile?);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(token: token, user: user),
-                ),
-              );
-            }
+          onLoginSuccess: (token, user) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(token: token, user: user),
+              ),
+            );
+          },
         ),
-        '/setting': (context) => const AppLayout(
-          child: SettingScreen(),
-        ),
+        '/setting': (context) => const AppLayout(child: SettingScreen()),
       },
     );
   }

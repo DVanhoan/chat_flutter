@@ -1,4 +1,4 @@
-import Conversation from '~/models/convensation.model'
+import Conversation from '../models/convensation.model'
 import { Request, Response } from 'express'
 import Message from '~/models/message.model'
 
@@ -58,12 +58,13 @@ export const createChat = async (req: Request, res: Response) => {
   }
 }
 
-export const getRecentMessages = async (req: Request, res: Response) => {
+export const getRecentMessages = async (req: Request, res: Response): Promise<void> => {
   try {
     const { conversationId } = req.query
 
     if (!conversationId) {
-      return res.status(400).json({ message: 'conversationId is required' })
+      res.status(400).json({ message: 'conversationId is required' })
+      return
     }
 
     const messages = await Message.find({ conversationId })

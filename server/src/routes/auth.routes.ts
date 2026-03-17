@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { type RequestHandler } from 'express'
 import { getMe, login, logout, signup, getAll } from '../controllers/auth.controller'
 import { protectRoute } from '../middlewares/protectRoute'
 
